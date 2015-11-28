@@ -7,22 +7,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 self.port.on('parseCourse', function(){
     console.log("parsecourse");
 
@@ -34,16 +18,16 @@ self.port.on('parseCourse', function(){
     rows.forEach(function(r, ri){
 	var cellArray = Array.from(r.cells);
 	cellArray.forEach(function(c, ci){
-	    if(ci == 4)
+	    if(ci == 4){
 		console.log(c.innerHTML);
+		var updateCount = ri;
+		c.innerHTML += "("+ updateCount + ")";
+	    }
 	});
     });
-    console.log("table: ", tables[0].rows[0].cells[0].innerHTML);//學期
-    //var rows = tables[0];
-    //console.log(rows);
-    //var last = rows[rows.length - 1];
-    //var cell = last.cells[0];
-    //var value = cell.innerHTML
+
+    //javascript
+    
 });
 
 self.port.on('init', function(){

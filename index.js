@@ -15,31 +15,26 @@ var button = buttons.ActionButton({
 });
 
 
+function getWorker(){
+    var worker = tabs.activeTab.attach({
+	contentScriptFile: [
+	    data.url("jquery-1.11.3.min.js"),
+	    data.url("bootstrap.js"),
+	    data.url("autologin.js")
+	],
+    });
+}
+
 tabs.on('ready', function(tab) {
     //console.log('tab is loaded', tab.title, tab.url);
     if(tab.url == "https://ceiba.ntu.edu.tw/"){
-	var worker = tabs.activeTab.attach({
-	    contentScriptFile: [
-		data.url("jquery-1.11.3.min.js"),
-		data.url("autologin.js")
-	    ],
-	});
+	var worker = getWorker();
 	worker.port.emit("init");
     } else if(tab.url == "https://web2.cc.ntu.edu.tw/p/s/login2/p1.php"){
-	var worker = tabs.activeTab.attach({
-	    contentScriptFile: [
-		data.url("jquery-1.11.3.min.js"),
-		data.url("autologin.js")
-	    ],
-	});
+	var worker = getWorker();
 	worker.port.emit("login");
     } else if(tab.url == "https://ceiba.ntu.edu.tw/student/index.php" || tab.url == "https://ceiba.ntu.edu.tw/student/"){
-	var worker = tabs.activeTab.attach({
-	    contentScriptFile: [
-		data.url("jquery-1.11.3.min.js"),
-		data.url("autologin.js")
-	    ],
-	});
+	var worker = getWorker();
 	worker.port.emit("parseCourse");
     }
 });
