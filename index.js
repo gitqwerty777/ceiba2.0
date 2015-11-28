@@ -31,7 +31,8 @@ tabs.on('ready', function(tab) {
 	worker.port.emit("init");
     } else if(tab.url == "https://web2.cc.ntu.edu.tw/p/s/login2/p1.php"){
 	var worker = getWorker();
-	worker.port.emit("login");
+	var password = data.load("login.data");
+	worker.port.emit("login", password);
     } else if(tab.url == "https://ceiba.ntu.edu.tw/student/index.php" || tab.url == "https://ceiba.ntu.edu.tw/student/"){
 	var worker = getWorker();
 	worker.port.emit("parseCourse");
