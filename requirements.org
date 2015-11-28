@@ -1,0 +1,17 @@
+* ceiba ver2.0
+** architecture diagram
+*** write modules
+** functional requirements
+*** front-end
+1. 
+2. 
+3. 
+*** back-end
+1.
+2. 
+** interface requirements
+** nonfunctional requirements
+*** retrieve speed should be fast
+*** convenient to use
+*** (google some principles of data-merged website)
+

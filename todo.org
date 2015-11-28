@@ -1,0 +1,30 @@
+* framworks
+http://web.jobbole.com/81876/
+http://jaceju.net/2015/07/08/front-end-framework-summary/
+** bootstrap http://startbootstrap.com/template-categories/all/
+*** admin-look
+** foundation
+** uikit
+* layout
+** pingendo
+* front-end
+** React.js + flux
+** Angular.js
+** Backbone
+* test
+** blank html, add bootstrap ui
+** admin html, manipulate
+* editor
+** sublime text
+** others
+* prototype
+** paper-prototype
+* database
+** amazon server + mysql, php
+* workflow
+** login -> crawl all datas from ceiba -> put it into database(new or update?) ->
+* possible problems
+
+
+
+
