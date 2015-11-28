@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 self.port.on('parseCourse', function(){
     console.log("parsecourse");
 

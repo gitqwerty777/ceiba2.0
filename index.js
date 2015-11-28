@@ -16,10 +16,9 @@ var button = buttons.ActionButton({
 
 
 function getWorker(){
-    var worker = tabs.activeTab.attach({
+    return tabs.activeTab.attach({
 	contentScriptFile: [
 	    data.url("jquery-1.11.3.min.js"),
-	    data.url("bootstrap.js"),
 	    data.url("autologin.js")
 	],
     });
