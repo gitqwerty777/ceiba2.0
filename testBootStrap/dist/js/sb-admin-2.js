@@ -1,16 +1,21 @@
+
+function addNotifications(){
+    $(".dropdown-alerts li:eq(0)").before("<li class=\"divider\"></li>");
+    $(".dropdown-alerts li:eq(0)").before('<li><a href=\"#\"><div><i class=\"fa fa-comment fa-fw\"></i> New Comment<span class="pull-right text-muted small">4 minutes ago</span></div></a></li>');
+}
+
+function addHomeworks(){
+   $(".dropdown-tasks li:eq(0)").before("<li class=\"divider\"></li>");
+    $(".dropdown-tasks li:eq(0)").before('<li>                            <a href=\"#\">                                <div>                                    <p>                                        <strong>Task 1</strong>                                        <span class=\"pull-right text-muted\">40% Complete</span>                                    </p>                                    <div class=\"progress progress-striped active\">                                        <div class=\"progress-bar progress-bar-success\" role=\"progressbar\" aria-valuenow=\"40\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 40%\"><span class=\"sr-only\">40% Complete (success)</span></div></div></div></a></li>');
+}
+
 $(function() {
 
     $('#side-menu').metisMenu();
-    $(".dropdown-alerts li:eq(0)").before('<li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-comment fa-fw"></i> New Comment
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>');
-
+    addNotifications();
+    addHomeworks();
 });
+
 
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.
