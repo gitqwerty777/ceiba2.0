@@ -1,6 +1,14 @@
 $(function() {
 
     $('#side-menu').metisMenu();
+    $(".dropdown-alerts li:eq(0)").before('<li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> New Comment
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>');
 
 });
 
