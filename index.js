@@ -19,7 +19,8 @@ function getWorker(){
     return tabs.activeTab.attach({
 	contentScriptFile: [
 	    data.url("jquery-1.11.3.min.js"),
-	    data.url("autologin.js")
+	    data.url("autologin.js"),
+		data.url("readhttp.js")
 	],
     });
 }
