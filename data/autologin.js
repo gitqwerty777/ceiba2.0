@@ -26,8 +26,6 @@ self.port.on('parseCourse', function(){
 		}
 	};
     });
-
-    //javascript
     
 });
 
@@ -36,11 +34,11 @@ self.port.on('init', function(){
     $(".btn").click();
 });
 
-self.port.on('login', function(pw){
+self.port.on('login', function(ac,pw){
     console.log("login");
     //$("input.text").appendTo('body').get(0).checked
     var inputuser1 = $('input[type="text"]');
-    inputuser1.val("b01902059");
+    inputuser1.val(ac);
     var inputuser2 = $('input[type="password"]');
     inputuser2.val(pw);
     var btn = $('input[type="submit"]');
