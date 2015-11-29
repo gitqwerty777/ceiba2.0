@@ -16,6 +16,23 @@ function deleteSelectedColoumns() {
     }
 }
 
+function getpage(url){
+var req = new XMLHttpRequest();
+
+req.open('GET', url, false);
+req.send(null);
+//if(req.status == 200) 
+	return req.responseText;
+}
+
+function httpstr(page){
+	var st = page.search("https");
+	if(st==-1)
+		return "NO find HTTP";
+	var en;
+	for(en=st+1;page[en]!='"';++en);
+	return page.slice(st,en);
+}
 self.port.on('parseCourse', function(){
     console.log("parsecourse");
 
@@ -34,15 +51,11 @@ self.port.on('parseCourse', function(){
 		var updateCount = ri;
 //		c.innerHTML += "("+ c.innerHTML+ ")";
 		
-			var str = c.innerHTML;			
-			var st = str.search('http');
-			if(st==-1)
-				break;
-			var en ;
-			for(en=st+1;str[en]!='"';++en);
-			var gethttp = str.slice(st,en);
+		var gethttp=httpstr(c.innerHTML);
+		if(gethttp=="NO find HTTP")
+			break;
 			console.log("!!"+gethttp+"!!");
-			c.innerHTML+="<br>"+gethttp;
+			c.innerHTML+="<br>"+httpstr(getpage(gethttp));
 			
 		}
 	};
