@@ -1,9 +1,19 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import requests, grequests
-import json
+import requests, grequests, hashlib
+import json, codecs
+import cgitb
+
 from pyquery import PyQuery as pq
 
-fullData = {"bulletin":[], "syllabus":[], "grade":[], "homework":[]}
+fullData = {"bulletin":[], "syllabus":[], "grade":[], "homework":[], "courseName":[]}
+duplicateChecker = set()
+
+def getHashValue(data):
+    hashvalue = hashlib.md5()
+    hashvalue.update(json.dumps(data, indent=4))
+    hashvalue = hashvalue.digest()
+    return hashvalue
 
 def handleBulletin(content):
     bulletin = pq(content)
@@ -103,20 +113,48 @@ def handleGrade(content):
 def hook_factory(*factory_args, **factory_kwargs):
     def response_hook(response, *request_args, **request_kwargs):
         #print "ci = ", factory_kwargs["cid"], " fi = ", factory_kwargs["fid"], " url = ", response.url
+        
+
         ci = factory_kwargs["cid"]
         fi = factory_kwargs["fid"]
+        print response.url + "\t ci = " + str(ci) + "\t fi = " + str(fi) + "\n"
         if(factory_kwargs["url"] != response.url):
             content = response.content.decode('big5')
             if(fi == 0):
                 #handlers[0](content) TODO:
-                fullData["bulletin"].append(handleBulletin(content))
+                data = handleBulletin(content)
+                hashvalue = getHashValue(data)
+                if (hashvalue not in duplicateChecker):
+                    duplicateChecker.add(hashvalue)
+                    fullData["bulletin"].append(data)
+                else:
+                    fullData["bulletin"].append([])
             elif(fi == 1):
-                fullData["syllabus"].append(handleSyllabus(content))
+                data = handleSyllabus(content)
+                hashvalue = getHashValue(data)
+                if (hashvalue not in duplicateChecker):
+                    duplicateChecker.add(hashvalue)
+                    fullData["syllabus"].append(data)
+                else:
+                    fullData["syllabus"].append([])
             elif(fi == 2):
-                fullData["homework"].append(handleHW(content))
+                data = handleHW(content)
+                hashvalue = getHashValue(data)
+                if (hashvalue not in duplicateChecker):
+                    duplicateChecker.add(hashvalue)
+                    fullData["homework"].append(data)
+                else:
+                    print "homework ", ci , "is the same"
+                    fullData["homework"].append([])
             elif(fi == 3):
-                fullData["grade"].append(handleGrade(content))
-        print fullData
+                data = handleGrade(content)
+                hashvalue = getHashValue(data)
+                if (hashvalue not in duplicateChecker):
+                    duplicateChecker.add(hashvalue)
+                    fullData["grade"].append(data)
+                else:
+                    fullData["grade"].append([])
+        #print fullData
         return response
     return response_hook
     
@@ -143,11 +181,11 @@ class CeibaParser:
         #session = requests_cache.CachedSession()
         self.session = requests.Session()
         r1 = self.session.head(URL, allow_redirects=True) # redirect
-        print (r1.status_code, r1.url, str(r1.cookies))
+        #print (r1.status_code, r1.url, str(r1.cookies))
         r2 = self.session.post(r1.url, data=payload, allow_redirects=True) # login
-        print (r2.status_code, r2.url, str(r2.cookies))
+        #print (r2.status_code, r2.url, str(r2.cookies))
         r4 = self.session.get(r2.url, allow_redirects=True) # redirect and get
-        print (r4.status_code, r4.url, str(r4.cookies))
+        #print (r4.status_code, r4.url, str(r4.cookies))
 
         # r4.text.__class__  -> unicode
         # maybe encoding error
@@ -160,14 +198,16 @@ class CeibaParser:
         for ri, tr in enumerate(table("tr").items()):
             for ci, td in enumerate(tr("td").items()):
                 if(ci == 4):
+                    fullData["courseName"].append(td("a").html())
                     self.courseURLs.append(td("a").attr["href"])
-        print self.courseURLs
+
+        #print self.courseURLs
 
         courseRequest = (grequests.get(u, allow_redirects=True, session=self.session) for u in self.courseURLs)
         courseResponse = grequests.map(courseRequest)
         for u in courseResponse:
             self.courseIDs.append(u.url.rsplit('/', 2)[-2])
-            print u.url.rsplit('/', 2)[-2]
+            #print u.url.rsplit('/', 2)[-2]
 
     def parse(self):
 
@@ -177,7 +217,7 @@ class CeibaParser:
 
         #functionRequests = [] # tuple
         for ci, cname in enumerate(self.courseIDs):
-            self.session.get(self.courseURLs[ci], allow_redirects=True) # should goto course main page once to reset course information
+            self.session.get(self.courseURLs[ci], allow_redirects=True) # should goto course main page at least once to reset course information
             functionRequests = [] # tuple
             for fi, fname in enumerate(functionNames):
                 functionURL = functionURLformat % (cname, fname)
@@ -186,11 +226,18 @@ class CeibaParser:
             grequests.map(tuple(functionRequests))
 
 if __name__ == "__main__":
-    password = raw_input()
-    parser = CeibaParser("b01902059", password)
+    #cgitb.enable()
+    #print("Content-Type: text/html;charset=utf-8")
+    username = "r05922061"
+    password = password
+    # password = raw_input()
+    parser = CeibaParser(username, password)
     parser.parse()
-    print "\nfinal answer = \n"
-    with open("out.json", "w") as file:
+
+    with open("./"+ username +".json", "w") as file:
         json.dump(fullData, file, indent=4)
-    print fullData
+    #print json.dumps(fullData, indent=4, separators=(',', ': '), ensure_ascii=False, encoding='utf-8')
+    print json.dumps(fullData, indent=4, separators=(',', ': '), ensure_ascii=False, encoding='utf-8').encode("utf-8")
+     #print str(fullData).encode("utf-8")
+    
 
